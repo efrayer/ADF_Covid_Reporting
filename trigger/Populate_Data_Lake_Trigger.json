@@ -3,7 +3,7 @@
 	"properties": {
 		"description": "A scheduled trigger to run a copy from Blob storage to Data Lake storage",
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
