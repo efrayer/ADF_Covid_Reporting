@@ -1,8 +1,8 @@
 {
-	"name": "trigger1",
+	"name": "tr_ingest_population_data",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
