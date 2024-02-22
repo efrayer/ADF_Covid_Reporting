@@ -18,6 +18,10 @@
 		"ls_adls_covidreportingdleric_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://covidreportingdleric.dfs.core.windows.net"
+		},
+		"tr_ingest_population_data_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/0e0b11f6-e587-48cd-a34c-ffc39fb54dd8/resourceGroups/covid-reporting-rg/providers/Microsoft.Storage/storageAccounts/covidreportingsaeric"
 		}
 	},
 	"variables": {
@@ -117,9 +121,9 @@
 									},
 									"userProperties": [],
 									"typeProperties": {
-										"url": "https://file_incompatible",
 										"method": "POST",
 										"headers": {},
+										"url": "https://file_incompatible",
 										"body": "dummy"
 									}
 								}
@@ -329,7 +333,7 @@
 			"properties": {
 				"description": "A scheduled trigger to run a copy from Blob storage to Data Lake storage",
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
@@ -348,6 +352,36 @@
 						"endTime": "2023-12-30T20:00:00",
 						"timeZone": "Eastern Standard Time"
 					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pl_ingest_population_data')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/tr_ingest_population_data')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "pl_ingest_population_data",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/population/blobs/population_by_age_tsv.gz",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('tr_ingest_population_data_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
 				}
 			},
 			"dependsOn": [
